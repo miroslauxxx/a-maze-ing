@@ -17,7 +17,7 @@ class Config:
         self.__params = {}
 
     def validate(self, filename: str) -> None:
-
+        # try and except block and validate for neg. values
         with open(filename, 'rt') as file:
             for line in file:
                 if line.strip()[0] != '#':
@@ -41,3 +41,7 @@ class Config:
             self._output_file = str(self.__params['OUTPUT_FILE'])
             self._perfect = bool(self.__params['PERFECT'])
             self._seed = int(self.__params['SEED'])
+
+c = Config()
+c.validate("config")
+print(c._width, c._height, c._entry, c._exit, c._output_file, c._perfect, c._seed)
