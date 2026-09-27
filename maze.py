@@ -1,5 +1,8 @@
 import random  # to randomly choose a possible neighbor
 
+
+
+
 NORTH = 1
 EAST = 2
 SOUTH = 4
@@ -9,182 +12,172 @@ ALL_WALLS = NORTH | EAST | SOUTH | WEST
 # NORTH 0001, EAST 0010, SOUTH 0100, WEST 1000 --- ALL_WALLS = 1111
 # completely closed cell = 15 = 1111
 
+class MazeGenerator:
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
 
-def create_maze(width: int, height: int) -> list[list[int]]:
+        self.maze = self.create_maze()
+        self.blocked = self.create_42_cells()
 
-    maze : list[list[int]] = []
+    def create_maze(self) -> list[list[int]]:
+        maze: list[list[int]] = []
 
-    for y in range(height):
+        for y in range(self.height):
+            row: list[int] = []
 
-        row : list[int] = []
+            for x in range(self.width):
+                row.append(ALL_WALLS)
 
-        for x in range(width):
-            row.append(ALL_WALLS)
+            maze.append(row)
 
-        maze.append(row)
-
-    return maze
-
-
-def remove_wall(
-        maze: list[list[int]],
-        x: int,
-        y: int,
-        direction: int,
-) -> None:
-
-    if direction == NORTH:
-        maze[y][x] &= ~NORTH
-        maze[y - 1][x] &= ~SOUTH
-        
-    elif direction == EAST:
-        maze[y][x] &= ~EAST
-        maze[y][x + 1] &= ~WEST
-
-    elif direction == SOUTH:
-        maze[y][x] &= ~SOUTH
-        maze[y + 1][x] &= ~NORTH
-
-    elif direction == WEST:
-        maze[y][x] &= ~WEST
-        maze[y][x - 1] &= ~EAST
+        return maze
 
 
+    def remove_wall(
+            self,
+            x: int,
+            y: int,
+            direction: int,
+    ) -> None:
 
-def get_neighbors(
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-        visited: set[tuple[int, int]],
-        blocked: set[tuple[int, int]],
-) -> list[tuple[int, int, int]]:
+        if direction == NORTH:
+            self.maze[y][x] &= ~NORTH
+            self.maze[y - 1][x] &= ~SOUTH
 
-    neighbors: list[tuple[int, int, int]] = []
+        elif direction == EAST:
+            self.maze[y][x] &= ~EAST
+            self.maze[y][x + 1] &= ~WEST
 
-    if x + 1 < width and (x + 1, y) not in visited and (x + 1, y) not in blocked:
-        neighbors.append((x + 1, y, EAST))
+        elif direction == SOUTH:
+            self.maze[y][x] &= ~SOUTH
+            self.maze[y + 1][x] &= ~NORTH
 
-    if x - 1 >= 0 and (x - 1, y) not in visited and (x - 1, y) not in blocked:
-        neighbors.append((x - 1, y, WEST))
-
-    if y + 1 < height and (x, y + 1) not in visited and (x, y + 1) not in blocked:
-        neighbors.append((x, y + 1, SOUTH))
-
-    if y - 1 >= 0 and (x, y - 1) not in visited and (x, y - 1) not in blocked:
-        neighbors.append((x, y - 1, NORTH))
-
-    return neighbors
+        elif direction == WEST:
+            self.maze[y][x] &= ~WEST
+            self.maze[y][x - 1] &= ~EAST
 
 
-def create_42_cells(
-        width: int,
-        height: int,
-) -> set[tuple[int, int]]: # use a set for fast membership checks
+    def get_neighbors(
+            self,
+            x: int,
+            y: int,
+            visited: set[tuple[int, int]],
+    ) -> list[tuple[int, int, int]]:
 
-    pattern_width = 7
-    pattern_height = 5
+        neighbors: list[tuple[int, int, int]] = []
 
-    if width < pattern_width + 2 or height < pattern_height + 2:
-        print("Error: Maze is too small for the 42 pattern.")
-        return set()     # return empty set
+        if x + 1 < self.width and (x + 1, y) not in visited and (x + 1, y) not in self.blocked:
+            neighbors.append((x + 1, y, EAST))
 
-    pattern_cells: set[tuple[int, int]] = set()
+        if x - 1 >= 0 and (x - 1, y) not in visited and (x - 1, y) not in self.blocked:
+            neighbors.append((x - 1, y, WEST))
 
-    # 4
+        if y + 1 < self.height and (x, y + 1) not in visited and (x, y + 1) not in self.blocked:
+            neighbors.append((x, y + 1, SOUTH))
 
-    pattern_cells.add((0, 0))
-    pattern_cells.add((2, 0))
+        if y - 1 >= 0 and (x, y - 1) not in visited and (x, y - 1) not in self.blocked:
+            neighbors.append((x, y - 1, NORTH))
 
-    pattern_cells.add((0, 1))
-    pattern_cells.add((2, 1))
-
-    pattern_cells.add((0, 2))
-    pattern_cells.add((1, 2))
-    pattern_cells.add((2, 2))
-
-    pattern_cells.add((2, 3))
-    pattern_cells.add((2, 4))
-
-    # 2
-
-    pattern_cells.add((4, 0))
-    pattern_cells.add((5, 0))
-
-    pattern_cells.add((6, 0))
-    pattern_cells.add((6, 1))
-
-    pattern_cells.add((6, 2))
-    pattern_cells.add((5, 2))
-    pattern_cells.add((4, 2))
-
-    pattern_cells.add((4, 3))
-    pattern_cells.add((4, 4))
-
-    pattern_cells.add((5, 4))
-    pattern_cells.add((6, 4))
-
-    offset_x = (width - pattern_width) // 2
-    offset_y = (height - pattern_height) // 2
-
-    centered_cells: set[tuple[int, int]] = set()
-
-    for x, y in pattern_cells:
-        centered_cells.add((x + offset_x, y + offset_y))
-
-    return centered_cells
+        return neighbors
 
 
+    def create_42_cells(
+        self,
+    ) -> set[tuple[int, int]]:  # use a set for fast membership checks
 
-def generate_maze(
-        width: int,
-        height: int,
-) -> list[list[int]]:
+        pattern_width = 7
+        pattern_height = 5
 
-    maze = create_maze(width, height)
+        if self.width < pattern_width + 2 or self.height < pattern_height + 2:
+            print("Error: Maze is too small for the 42 pattern.")
+            return set()     # return empty set
 
-    blocked = create_42_cells(width, height)
+        pattern_cells: set[tuple[int, int]] = set()
 
-    visited: set[tuple[int, int]] = set()
+        # 4
 
-    x = 0
-    y = 0
+        pattern_cells.add((0, 0))
+        pattern_cells.add((2, 0))
 
-    visited.add((x, y))
+        pattern_cells.add((0, 1))
+        pattern_cells.add((2, 1))
 
-    stack: list[tuple[int, int]] = [(x, y)]
+        pattern_cells.add((0, 2))
+        pattern_cells.add((1, 2))
+        pattern_cells.add((2, 2))
 
-    while stack:
-        x, y = stack[-1]
+        pattern_cells.add((2, 3))
+        pattern_cells.add((2, 4))
 
-        neighbors = get_neighbors(
-            x,
-            y,
-            width,
-            height,
-            visited,
-            blocked
-        )
+        # 2
 
-        if neighbors:
-            next_cell = random.choice(neighbors)
-            nx, ny, direction = next_cell
+        pattern_cells.add((4, 0))
+        pattern_cells.add((5, 0))
 
-            remove_wall(maze, x, y, direction)
-            visited.add((nx, ny))
-            stack.append((nx, ny))
+        pattern_cells.add((6, 0))
+        pattern_cells.add((6, 1))
 
-        else:
-            stack.pop()
+        pattern_cells.add((6, 2))
+        pattern_cells.add((5, 2))
+        pattern_cells.add((4, 2))
 
-    # print("Visited:", len(visited))
-    # print("Expected:", width * height - len(blocked))      # Check if the backtracker reached all non-blocked cells
+        pattern_cells.add((4, 3))
+        pattern_cells.add((4, 4))
 
-    return maze
+        pattern_cells.add((5, 4))
+        pattern_cells.add((6, 4))
+
+        offset_x = (self.width - pattern_width) // 2
+        offset_y = (self.height - pattern_height) // 2
+
+        centered_cells: set[tuple[int, int]] = set()
+
+        for x, y in pattern_cells:
+            centered_cells.add((x + offset_x, y + offset_y))
+
+        return centered_cells
 
 
-maze = generate_maze(10, 10)
+    def generate_maze(self) -> list[list[int]]:
+
+        visited: set[tuple[int, int]] = set()
+
+        x = 0
+        y = 0
+
+        visited.add((x, y))
+
+        stack: list[tuple[int, int]] = [(x, y)]
+
+        while stack:
+            x, y = stack[-1]
+
+            neighbors = self.get_neighbors(
+                x,
+                y,
+                visited,
+            )
+
+            if neighbors:
+                next_cell = random.choice(neighbors)
+                nx, ny, direction = next_cell
+
+                self.remove_wall(x, y, direction)
+                visited.add((nx, ny))
+                stack.append((nx, ny))
+
+            else:
+                stack.pop()
+
+        # print("Visited:", len(visited))
+        # print("Expected:", width * height - len(blocked))      # Check if the backtracker reached all non-blocked cells
+
+        return self.maze
+
+
+generator = MazeGenerator(10, 10)
+maze = generator.generate_maze()
 
 for row in maze:
     print(row)
-
