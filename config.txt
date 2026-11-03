@@ -1,4 +1,4 @@
-# Maze Dimensions (columns and rows >= 3)
+ Maze Dimensions (columns and rows >= 3)
 WIDTH = 25
 HEIGHT = 15
 
