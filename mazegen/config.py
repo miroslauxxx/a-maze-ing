@@ -153,6 +153,8 @@ class Config:
         try:
             self._width = int(self._params["WIDTH"])
             self._height = int(self._params["HEIGHT"])
+            if self._width or self._height < 0:
+                raise ConfigError(f"WIDTH or HEIGHT cannot be negative!")
         except ValueError as exc:
             raise ConfigError(f"WIDTH and HEIGHT must be valid integers: {exc}") from exc
 
