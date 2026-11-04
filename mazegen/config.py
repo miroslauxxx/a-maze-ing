@@ -201,17 +201,6 @@ class Config:
         else:
             self._seed = None
 
-    def as_dict(self) -> dict[str, Any]:
-        """Return the configuration parameters as a dictionary."""
-        return {
-            "width": self._width,
-            "height": self._height,
-            "entry": self._entry,
-            "exit": self._exit,
-            "output_file": self._output_file,
-            "perfect": self._perfect,
-            "seed": self._seed,
-        }
 
 
 def parse_config(filename: str) -> Config:
