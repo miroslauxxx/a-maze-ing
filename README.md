@@ -37,7 +37,7 @@ The `mazegen` package is fully standalone and can be imported directly or instal
 
 ```bash
 # Install local wheel package
-pip install dist/mazegen-1.0.0-py3-none-any.whl
+pip install mazegen-1.0.0-py3-none-any.whl
 ```
 
 ### Python API Example
