@@ -59,21 +59,15 @@ generator = MazeGenerator(
 # 2. Generate the maze layout
 maze_grid = generator.generate_maze()
 
-# 3. Verify maze integrity
-assert generator.check_wall_coherence() is True
-assert generator.check_borders() is True
-assert generator.check_connectivity() is True
-assert generator.check_no_loops() is True  # True for perfect mazes
-
-# 4. Access the grid structure (2D list of wall masks: North=1, East=2, South=4, West=8)
+# 3. Access the grid structure (2D list of wall masks: North=1, East=2, South=4, West=8)
 print("Row 0:", maze_grid[0])
 
-# 5. Retrieve solution path and directional moves
+# 4. Retrieve solution path and directional moves
 path = generator.get_solution_path()            # List of (x, y) tuples
 directions = generator.get_solution_directions()  # e.g. "EESEEENEES..."
 print(f"Shortest path steps: {len(path)}, Directions: {directions}")
 
-# 6. Save output formatted to specification
+# 5. Save output formatted to specification
 generator.write_to_file("maze.txt")
 ```
 ---
