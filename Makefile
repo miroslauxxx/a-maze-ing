@@ -1,6 +1,3 @@
-# Makefile for A-Maze-ing (42 Curriculum)
-# Authors: Hanna Schulze (haschulz), Miroslau Ilnicki (milnicki)
-
 SHELL := /bin/bash
 VENV := .venv
 PYTHON := $(shell if [ -f $(VENV)/bin/python3 ]; then echo $(VENV)/bin/python3; else echo python3; fi)
@@ -18,7 +15,6 @@ help:
 	@echo "A-Maze-ing Makefile Commands:"
 	@echo "  make install     - Setup virtualenv and install package & dependencies"
 	@echo "  make run         - Run the interactive Terminal UI maze program"
-	@echo "  make debug       - Run in diagnostic debug mode"
 	@echo "  make lint        - Run flake8 and mypy with strict flags"
 	@echo "  make lint-strict - Run full strict linting over all project files"
 	@echo "  make build       - Build the reusable mazegen wheel & source distribution"
@@ -38,20 +34,16 @@ install:
 run:
 	@$(PYTHON) a_maze_ing.py $(CONFIG)
 
-debug:
-	@$(PYTHON) -m pdb a_maze_ing.py $(CONFIG)
-
 lint:
-	@echo "==> Running flake8..."
+	@echo " Running flake8..."
 	@$(FLAKE8) .
-	@echo "==> Running mypy with subject flags..."
+	@echo " Running mypy with subject flags..."
 	@$(MYPY) . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
-	@echo "All lint checks passed successfully!"
 
 lint-strict:
-	@echo "==> Running strict flake8..."
+	@echo " Running strict flake8..."
 	@$(FLAKE8) .
-	@echo "==> Running strict mypy over repository..."
+	@echo " Running strict mypy over repository..."
 	@$(MYPY) --strict .
 	@echo "All strict lint checks passed successfully!"
 

@@ -1,7 +1,6 @@
 """Configuration parser and validator for A-Maze-ing."""
 
 import os
-from typing import Any
 
 MANDATORY_KEYS: tuple[str, ...] = (
     "WIDTH",
@@ -198,7 +197,6 @@ class Config:
                 raise ConfigError(f"Invalid integer for SEED: '{self._params['SEED']}'") from exc
         else:
             self._seed = None
-
 
 
 def parse_config(filename: str) -> Config:

@@ -1,5 +1,3 @@
-"""Maze generator module implementing recursive backtracking, 42 pattern, and Pac-Man mode."""
-
 import random
 
 NORTH: int = 1
@@ -10,7 +8,7 @@ ALL_WALLS: int = NORTH | EAST | SOUTH | WEST
 
 
 class MazeGenerationError(ValueError):
-    """Exception raised when maze generation parameters are invalid."""
+    """Exception used when maze generation parameters are invalid."""
 
     pass
 
@@ -107,7 +105,6 @@ class MazeGenerator:
 
         pattern_cells: set[tuple[int, int]] = set()
 
-        # '4' shape
         pattern_cells.add((0, 0))
         pattern_cells.add((2, 0))
         pattern_cells.add((0, 1))
@@ -118,7 +115,6 @@ class MazeGenerator:
         pattern_cells.add((2, 3))
         pattern_cells.add((2, 4))
 
-        # '2' shape
         pattern_cells.add((4, 0))
         pattern_cells.add((5, 0))
         pattern_cells.add((6, 0))
